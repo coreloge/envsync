@@ -15,6 +15,16 @@ type RedactSummary struct {
 	SafeKeys     []string `json:"safe_keys"`
 }
 
+// RedactedCount returns the number of redacted keys.
+func (r RedactSummary) RedactedCount() int {
+	return len(r.RedactedKeys)
+}
+
+// SafeCount returns the number of safe (unredacted) keys.
+func (r RedactSummary) SafeCount() int {
+	return len(r.SafeKeys)
+}
+
 // WriteRedactSummary writes a human-readable or JSON redaction report to w.
 func WriteRedactSummary(w io.Writer, summary RedactSummary, format string) error {
 	switch format {
@@ -30,8 +40,8 @@ func writeRedactText(w io.Writer, s RedactSummary) error {
 	fmt.Fprintf(tw, "Redaction Summary\n")
 	fmt.Fprintf(tw, "-----------------\n")
 	fmt.Fprintf(tw, "Total keys:\t%d\n", s.TotalKeys)
-	fmt.Fprintf(tw, "Redacted:\t%d\n", len(s.RedactedKeys))
-	fmt.Fprintf(tw, "Safe:\t%d\n", len(s.SafeKeys))
+	fmt.Fprintf(tw, "Redacted:\t%d\n", s.RedactedCount())
+	fmt.Fprintf(tw, "Safe:\t%d\n", s.SafeCount())
 
 	if len(s.RedactedKeys) > 0 {
 		sorted := sorted(s.RedactedKeys)
