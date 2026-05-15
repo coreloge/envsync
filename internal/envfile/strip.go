@@ -1,6 +1,10 @@
 package envfile
 
-import "strings"
+import (
+	"fmt"
+	"sort"
+	"strings"
+)
 
 // StripOptions controls which keys are removed during a strip operation.
 type StripOptions struct {
