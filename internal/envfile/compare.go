@@ -53,3 +53,29 @@ func Compare(sourceEnv, targetEnv string, source, target map[string]string, opts
 func (r CompareResult) HasDrift() bool {
 	return len(r.OnlyInSource) > 0 || len(r.OnlyInTarget) > 0 || len(r.Mismatched) > 0
 }
+
+// Summary returns a brief human-readable description of the comparison result.
+func (r CompareResult) Summary() string {
+	if !r.HasDrift() {
+		return r.SourceEnv + " and " + r.TargetEnv + " are in sync"
+	}
+	return r.SourceEnv + " and " + r.TargetEnv + " have drift: " +
+		itoa(len(r.OnlyInSource)) + " only in source, " +
+		itoa(len(r.OnlyInTarget)) + " only in target, " +
+		itoa(len(r.Mismatched)) + " mismatched"
+}
+
+// itoa converts an int to its decimal string representation without importing strconv.
+func itoa(n int) string {
+	if n == 0 {
+		return "0"
+	}
+	buf := [20]byte{}
+	pos := len(buf)
+	for n > 0 {
+		pos--
+		buf[pos] = byte('0' + n%10)
+		n /= 10
+	}
+	return string(buf[pos:])
+}
