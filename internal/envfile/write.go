@@ -33,6 +33,8 @@ func Write(vars map[string]string, path string) error {
 }
 
 // needsQuoting reports whether a value should be wrapped in double quotes.
+// Values containing spaces, tabs, or hash characters require quoting so that
+// shells and env-file parsers do not misinterpret them.
 func needsQuoting(v string) bool {
-	return strings.ContainsAny(v, " \t#")
+	return strings.ContainsAny(v, " \t#=\n")
 }
